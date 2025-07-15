@@ -74,8 +74,8 @@ A dívida técnica foi identificada e categorizada conforme o **modelo IDEA** (I
 |----------------------|---------|-------------------------------------|
 | Impedimento          | Laranja | Falta de tempo                      |
 | Razão Técnica        | Cinza   | Código mal estruturado              |
-
 ---
+Obs : foi colocado a 'opção não se aplica' nos outros cards para fins de organização no notion , pois se removesse as etiquetas de um card acabaria removendo de todos
 
 ## 🧪 Testes
 
