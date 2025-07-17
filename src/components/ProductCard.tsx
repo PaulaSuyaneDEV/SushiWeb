@@ -15,13 +15,21 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const { cart, addToCart, removeFromCart } = useCart()
+  const { cart, addToCart, removeFromCart, updateQuantity } = useCart()
+
+  const quantity = cart[product.id] || 0
+
+  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value)
+    if (isNaN(value) || value < 1) return
+    updateQuantity(product.id, value)
+  }
 
   return (
     <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition p-2 flex flex-col justify-between">
       <Image
         src={product.image}
-        alt={product.name}
+        alt={`Foto de ${product.name}, categoria ${product.category}`}
         width={250}
         height={150}
         className="w-full h-48 object-cover rounded-xl mb-4"
@@ -42,7 +50,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             Adicionar ao Carrinho
           </button>
 
-          {cart[product.id] && (
+          {quantity > 0 && (
             <button
               onClick={() => removeFromCart(product.id)}
               className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-2 rounded-lg text-sm font-medium"
@@ -52,10 +60,30 @@ export default function ProductCard({ product }: ProductCardProps) {
           )}
         </div>
 
-        {cart[product.id] && (
-          <p className="mt-2 text-sm text-gray-600">Quantidade: {cart[product.id]}</p>
+        {quantity > 0 && (
+          <div className="mt-2 flex items-center gap-2">
+            <label htmlFor={`qty-${product.id}`} className="text-sm text-gray-600">
+              Quantidade:
+            </label>
+            <input
+              id={`qty-${product.id}`}
+              type="number"
+              min={1}
+              value={quantity}
+              onChange={handleQuantityChange}
+              className="w-16 border border-gray-300 rounded px-2 py-1 text-sm"
+              style={{
+                WebkitAppearance: 'none',
+                MozAppearance: 'textfield',
+                appearance: 'textfield'
+              }}
+            />
+
+
+          </div>
         )}
       </div>
     </div>
   )
 }
+
