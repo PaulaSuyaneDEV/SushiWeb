@@ -26,7 +26,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition p-2 flex flex-col justify-between">
+    <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition p-3 flex flex-col justify-between">
       <Image
         src={product.image}
         alt={`Foto de ${product.name}, categoria ${product.category}`}
