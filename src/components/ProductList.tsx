@@ -27,15 +27,12 @@ export default function ProductList() {
     const fetchProducts = async () => {
       try {
         const res = await fetch('https://sushiweb-backend.onrender.com/menu')
-        const data: RawProduct[] = await res.json()
+        const data: Product[] = await res.json()
 
-        const adaptado: Product[] = data.map((item) => ({
-          id: item.id,
-          name: item.nome,
-          category: item.categoria,
-          image: item.imagem,
-          price: item.preco,
-        }))
+        const adaptado: Product[] = data.map((item) => {
+          item.image =  'https://sushiweb-backend.onrender.com' + item.image;
+          return item;
+        })
 
         setProducts(adaptado)
       } catch (error) {
