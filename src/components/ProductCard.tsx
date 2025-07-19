@@ -1,14 +1,8 @@
 'use client'
+
 import Image from 'next/image'
 import { useCart } from '@/context/CartContext'
-
-interface Product {
-  id: string
-  name: string
-  image: string
-  price: number
-  category: string
-}
+import { Product } from '@/context/CartContext'
 
 interface ProductCardProps {
   product: Product
@@ -17,7 +11,9 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   const { cart, addToCart, removeFromCart, updateQuantity } = useCart()
 
-  const quantity = cart[product.id] || 0
+  // Busca o item no carrinho
+  const cartItem = cart.find(item => item.id === product.id)
+  const quantity = cartItem?.quantity || 0
 
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value)
@@ -44,7 +40,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         <div className="mt-3 flex gap-2">
           <button
-            onClick={() => addToCart(product.id)}
+            onClick={() => addToCart(product)}
             className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-lg w-full text-sm font-medium"
           >
             Adicionar ao Carrinho
@@ -78,12 +74,11 @@ export default function ProductCard({ product }: ProductCardProps) {
                 appearance: 'textfield'
               }}
             />
-
-
           </div>
         )}
       </div>
     </div>
   )
 }
+
 

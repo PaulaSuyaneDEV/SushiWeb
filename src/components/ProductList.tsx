@@ -1,11 +1,50 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ProductCard from './ProductCard'
-import { products } from '@/data/products'
+
+type RawProduct = {
+  id: string
+  nome: string
+  categoria: string
+  imagem: string
+  preco: number
+}
+
+type Product = {
+  id: string
+  name: string
+  category: string
+  image: string
+  price: number
+}
 
 export default function ProductList() {
+  const [products, setProducts] = useState<Product[]>([])
   const [filter, setFilter] = useState<'todos' | 'comidas' | 'bebidas'>('todos')
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch('https://sushiweb-backend.onrender.com/menu')
+        const data: RawProduct[] = await res.json()
+
+        const adaptado: Product[] = data.map((item) => ({
+          id: item.id,
+          name: item.nome,
+          category: item.categoria,
+          image: item.imagem,
+          price: item.preco,
+        }))
+
+        setProducts(adaptado)
+      } catch (error) {
+        console.error('Erro ao buscar produtos:', error)
+      }
+    }
+
+    fetchProducts()
+  }, [])
 
   const filteredProducts = products.filter((product) => {
     if (filter === 'bebidas') return product.category === 'Bebida'
@@ -17,36 +56,19 @@ export default function ProductList() {
     <div className="container mx-auto px-4 py-6">
       {/* Botões de filtro */}
       <div className="flex flex-wrap justify-center gap-4 mb-8">
-        <button
-          className={`px-4 py-2 rounded-full border transition ${
-            filter === 'todos'
-              ? 'bg-red-600 text-white'
-              : 'border-red-600 text-red-600 hover:bg-red-100'
-          }`}
-          onClick={() => setFilter('todos')}
-        >
-          Todos
-        </button>
-        <button
-          className={`px-4 py-2 rounded-full border transition ${
-            filter === 'comidas'
-              ? 'bg-red-600 text-white'
-              : 'border-red-600 text-red-600 hover:bg-red-100'
-          }`}
-          onClick={() => setFilter('comidas')}
-        >
-          Comidas
-        </button>
-        <button
-          className={`px-4 py-2 rounded-full border transition ${
-            filter === 'bebidas'
-              ? 'bg-red-600 text-white'
-              : 'border-red-600 text-red-600 hover:bg-green-100'
-          }`}
-          onClick={() => setFilter('bebidas')}
-        >
-          Bebidas
-        </button>
+        {(['todos', 'comidas', 'bebidas'] as const).map((type) => (
+          <button
+            key={type}
+            className={`px-4 py-2 rounded-full border transition ${
+              filter === type
+                ? 'bg-red-600 text-white'
+                : 'border-red-600 text-red-600 hover:bg-red-100'
+            }`}
+            onClick={() => setFilter(type)}
+          >
+            {type.charAt(0).toUpperCase() + type.slice(1)}
+          </button>
+        ))}
       </div>
 
       {/* Lista de produtos */}
