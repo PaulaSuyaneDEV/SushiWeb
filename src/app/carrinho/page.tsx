@@ -10,7 +10,7 @@ export default function CarrinhoPage() {
     return product ? { ...product, quantity } : null
   }).filter(Boolean)
 
-  const total = cartItems.reduce((acc, item) => acc + item!.price * item!.quantity, 0)
+  const total = cartItems.reduce((acc, item) => acc + item!.price * item!.quantity.quantity, 0)
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
@@ -24,8 +24,8 @@ export default function CarrinhoPage() {
             <div key={item!.id} className="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm">
               <div>
                 <h2 className="text-lg font-semibold">{item!.name}</h2>
-                <p className="text-sm text-gray-500">Qtd: {item!.quantity}</p>
-                <p className="text-sm text-rose-600 font-bold">R$ {(item!.price * item!.quantity).toFixed(2)}</p>
+                <p className="text-sm text-gray-500">Qtd: {item!.quantity.quantity}</p>
+                <p className="text-sm text-rose-600 font-bold">R$ {(item!.price * item!.quantity.quantity).toFixed(2)}</p>
               </div>
               <button
                 onClick={() => removeFromCart(item!.id)}

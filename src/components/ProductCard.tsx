@@ -3,22 +3,27 @@
 import Image from 'next/image'
 import { useCart } from '@/context/CartContext'
 import { Product } from '@/context/CartContext'
+import { useState, useEffect } from 'react'
 
 interface ProductCardProps {
   product: Product
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const { cart, addToCart, removeFromCart, updateQuantity } = useCart()
+  const { cart, addToCart, removeFromCart, updateQuantity, removeQuantityFromCart } = useCart()
 
-  // Busca o item no carrinho
   const cartItem = cart.find(item => item.id === product.id)
   const quantity = cartItem?.quantity || 0
 
+  const [inputValue, setInputValue] = useState(quantity.toString())
+
+  // Sincroniza input com a quantidade real do carrinho
+  useEffect(() => {
+    setInputValue(quantity.toString())
+  }, [quantity])
+
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value)
-    if (isNaN(value) || value < 1) return
-    updateQuantity(product.id, value)
+    setInputValue(e.target.value)
   }
 
   return (
@@ -48,7 +53,12 @@ export default function ProductCard({ product }: ProductCardProps) {
 
           {quantity > 0 && (
             <button
-              onClick={() => removeFromCart(product.id)}
+              onClick={() => {
+                const parsed = parseInt(inputValue)
+                if (!isNaN(parsed) && parsed >= 1) {
+                  removeQuantityFromCart(product.id, parsed)
+                }
+              }}
               className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-2 rounded-lg text-sm font-medium"
             >
               Remover
@@ -65,7 +75,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               id={`qty-${product.id}`}
               type="number"
               min={1}
-              value={quantity}
+              value={inputValue}
               onChange={handleQuantityChange}
               className="w-16 border border-gray-300 rounded px-2 py-1 text-sm"
               style={{
@@ -80,5 +90,3 @@ export default function ProductCard({ product }: ProductCardProps) {
     </div>
   )
 }
-
-
