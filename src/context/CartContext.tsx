@@ -5,6 +5,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 export type Product = {
   id: string
   name: string
+  description: string
   category: string
   image: string
   price: number
