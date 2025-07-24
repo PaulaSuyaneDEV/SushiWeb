@@ -16,6 +16,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const quantity = cartItem?.quantity || 0
 
   const [inputValue, setInputValue] = useState(quantity.toString())
+  const [hovered, setHovered] = useState(false)
 
   // Sincroniza input com a quantidade real do carrinho
   useEffect(() => {
@@ -27,25 +28,74 @@ export default function ProductCard({ product }: ProductCardProps) {
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition p-3 flex flex-col justify-between">
-      <Image
-        src={product.image}
-        alt={`Foto de ${product.name}, categoria ${product.category}`}
-        width={250}
-        height={150}
-        className="w-full h-48 object-cover rounded-xl mb-4"
-      />
+    <div
+      className={`
+        bg-white rounded-2xl shadow-lg transition-all duration-300
+        p-3 flex flex-col justify-between
+        hover:shadow-xl cursor-pointer
+        relative
+        ${hovered ? 'z-10' : ''}
+      `}
+      style={{
+        maxWidth: 300,
+        width: '100%',
+        overflow: 'hidden',
+        transition: 'transform 0.3s',
+        transform: hovered ? 'scale(1.05)' : 'scale(1)',
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <div
+        className="transition-transform duration-300"
+        style={{
+          transform: hovered ? 'scale(1.04)' : 'scale(1)',
+          borderRadius: '0.75rem',
+          overflow: 'hidden'
+        }}
+      >
+        <Image
+          src={product.image}
+          alt={`Foto de ${product.name}, categoria ${product.category}`}
+          width={250}
+          height={150}
+          className="w-full h-48 object-cover rounded-xl mb-4"
+          style={{
+            objectFit: 'cover',
+            transition: 'transform 0.3s',
+            transform: hovered ? 'scale(1.07)' : 'scale(1)'
+          }}
+        />
+      </div>
 
       <div className="flex-1 flex flex-col justify-between">
         <div>
           <h2 className="text-xl font-semibold text-gray-800">{product.name}</h2>
           <p className="text-sm text-gray-500 mb-2">{product.category}</p>
+          <div
+            className={`
+              transition-all duration-300
+              overflow-hidden
+              ${hovered ? 'opacity-100 mb-2' : 'opacity-0 max-h-0'}
+            `}
+            style={{
+              transition: 'opacity 0.3s, max-height 0.3s',
+              maxHeight: hovered ? '500px' : '0',
+            }}
+          >
+            <p className="text-gray-700 text-sm whitespace-pre-line break-words">
+              {product.description}
+            </p>
+          </div>
           <p className="text-lg font-bold text-rose-600">R$ {product.price.toFixed(2)}</p>
         </div>
 
         <div className="mt-3 flex gap-2">
           <button
-            onClick={() => addToCart(product)}
+            onClick={e => {
+              e.stopPropagation()
+              addToCart(product)
+            }}
             className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-lg w-full text-sm font-medium"
           >
             Adicionar ao Carrinho
@@ -53,7 +103,8 @@ export default function ProductCard({ product }: ProductCardProps) {
 
           {quantity > 0 && (
             <button
-              onClick={() => {
+              onClick={e => {
+                e.stopPropagation()
                 const parsed = parseInt(inputValue)
                 if (!isNaN(parsed) && parsed >= 1) {
                   removeQuantityFromCart(product.id, parsed)
@@ -77,6 +128,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               min={1}
               value={inputValue}
               onChange={handleQuantityChange}
+              onClick={e => e.stopPropagation()}
               className="w-16 border border-gray-400 bg-white text-gray-900 rounded px-2 py-1 text-sm"
               style={{
                 WebkitAppearance: 'none',

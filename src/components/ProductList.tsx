@@ -3,17 +3,10 @@
 import { useEffect, useState } from 'react'
 import ProductCard from './ProductCard'
 
-type RawProduct = {
-  id: string
-  nome: string
-  categoria: string
-  imagem: string
-  preco: number
-}
-
 type Product = {
   id: string
   name: string
+  description: string
   category: string
   image: string
   price: number
@@ -69,7 +62,7 @@ export default function ProductList() {
       </div>
 
       {/* Lista de produtos */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid items-start grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
         {filteredProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
