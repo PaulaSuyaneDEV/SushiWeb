@@ -77,7 +77,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               min={1}
               value={inputValue}
               onChange={handleQuantityChange}
-              className="w-16 border border-gray-300 rounded px-2 py-1 text-sm"
+              className="w-16 border border-gray-400 bg-white text-gray-900 rounded px-2 py-1 text-sm"
               style={{
                 WebkitAppearance: 'none',
                 MozAppearance: 'textfield',
