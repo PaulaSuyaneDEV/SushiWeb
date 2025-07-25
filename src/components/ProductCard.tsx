@@ -68,7 +68,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         {quantity > 0 && (
           <div className="mt-2 flex items-center gap-2">
-            <label htmlFor={`qty-${product.id}`} className="text-sm text-gray-600">
+            <label htmlFor={`qty-${product.id}`} className="text-sm text-gray-600" data-testid={`qty-${product.id}`}>
               Quantidade:
             </label>
             <input
