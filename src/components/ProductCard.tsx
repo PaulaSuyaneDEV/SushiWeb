@@ -40,7 +40,9 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div>
           <h2 className="text-xl font-semibold text-gray-800">{product.name}</h2>
           <p className="text-sm text-gray-500 mb-2">{product.category}</p>
-          <p className="text-lg font-bold text-rose-600">R$ {product.price.toFixed(2)}</p>
+          <p className="text-lg font-bold text-rose-600">
+            R$ {typeof product.price === 'number' ? product.price.toFixed(2) : '0.00'}
+          </p>
         </div>
 
         <div className="mt-3 flex gap-2">
